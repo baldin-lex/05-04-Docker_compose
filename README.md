@@ -128,12 +128,35 @@ Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
 
 ---
 
-## Задача 3
+### Задача 3
 
 С помощью Ansible и Docker Compose разверните на виртуальной машине из предыдущего задания систему мониторинга на основе Prometheus/Grafana.
 Используйте Ansible-код в директории ([src/ansible](https://github.com/netology-group/virt-homeworks/tree/virt-11/05-virt-04-docker-compose/src/ansible)).
 
 Чтобы получить зачёт, вам нужно предоставить вывод команды "docker ps" , все контейнеры, описанные в [docker-compose](https://github.com/netology-group/virt-homeworks/blob/virt-11/05-virt-04-docker-compose/src/ansible/stack/docker-compose.yaml),  должны быть в статусе "Up".
+
+### Решение:
+
+***1. Взял код из исходников и развернул инфраструктуру:***
+
+```console
+
+root@debian:~/task_3/terraform# terraform apply
+
+...
+...
+...
+...
+
+Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+external_ip_address_node01_yandex_cloud = "158.160.37.99"
+internal_ip_address_node01_yandex_cloud = "192.168.101.33"
+```
+
+***2. 
 
 ## Задача 4
 
