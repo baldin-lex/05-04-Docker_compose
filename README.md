@@ -156,7 +156,60 @@ external_ip_address_node01_yandex_cloud = "158.160.37.99"
 internal_ip_address_node01_yandex_cloud = "192.168.101.33"
 ```
 
-***2. 
+***2. На моем Debian не ставится никак Ansible (E: Невозможно исправить ошибки: у вас зафиксированы сломанные пакеты.). Поэтому я решил на ВМ поставить всё при помощи Docker-Compose. В итоге получаю вывод ```docker ps```:***
+
+```console
+root@node01:~# docker ps
+CONTAINER ID   IMAGE                              COMMAND                  CREATED          STATUS                          PORTS      NAMES
+c99f18a751e8   prom/prometheus:v2.17.1            "/bin/prometheus --c…"   34 minutes ago   Restarting (1) 12 seconds ago              prometheus
+4e179c64966e   prom/alertmanager:v0.20.0          "/bin/alertmanager -…"   34 minutes ago   Restarting (1) 13 seconds ago              alertmanager
+83ab208f0ac1   stefanprodan/caddy                 "/sbin/tini -- caddy…"   34 minutes ago   Restarting (1) 14 seconds ago              caddy
+34d6024feffc   prom/node-exporter:v0.18.1         "/bin/node_exporter …"   34 minutes ago   Up 25 minutes                   9100/tcp   nodeexporter
+0539a2b6c2f8   gcr.io/cadvisor/cadvisor:v0.47.0   "/usr/bin/cadvisor -…"   34 minutes ago   Up 25 minutes (healthy)         8080/tcp   cadvisor
+f4f52ef96527   grafana/grafana:7.4.2              "/run.sh"                34 minutes ago   Up 25 minutes                   3000/tcp   grafana
+f8b39c2c007f   prom/pushgateway:v1.2.0            "/bin/pushgateway"       34 minutes ago   Up 25 minutes                   9091/tcp   pushgateway
+```
+
+***Логи контейнеров prometheus, alertmanager, caddy примерно одинаковые. ВРоде как, жалуется на отсутствие конфигурационных файлов*** 
+
+```
+level=info ts=2023-04-02T15:34:43.272Z caller=main.go:683 fs_type=EXT4_SUPER_MAGIC
+level=info ts=2023-04-02T15:34:43.272Z caller=main.go:684 msg="TSDB started"
+level=info ts=2023-04-02T15:34:43.272Z caller=main.go:788 msg="Loading configuration file" filename=/etc/prometheus/prometheus.yml
+level=info ts=2023-04-02T15:34:43.272Z caller=main.go:535 msg="Stopping scrape discovery manager..."
+level=info ts=2023-04-02T15:34:43.272Z caller=main.go:549 msg="Stopping notify discovery manager..."
+level=info ts=2023-04-02T15:34:43.272Z caller=main.go:571 msg="Stopping scrape manager..."
+level=info ts=2023-04-02T15:34:43.272Z caller=main.go:531 msg="Scrape discovery manager stopped"
+level=info ts=2023-04-02T15:34:43.272Z caller=manager.go:882 component="rule manager" msg="Stopping rule manager..."
+level=info ts=2023-04-02T15:34:43.272Z caller=main.go:545 msg="Notify discovery manager stopped"
+level=info ts=2023-04-02T15:34:43.272Z caller=manager.go:892 component="rule manager" msg="Rule manager stopped"
+level=info ts=2023-04-02T15:34:43.272Z caller=main.go:565 msg="Scrape manager stopped"
+level=info ts=2023-04-02T15:34:43.275Z caller=notifier.go:598 component=notifier msg="Stopping notification manager..."
+level=info ts=2023-04-02T15:34:43.275Z caller=main.go:738 msg="Notifier manager stopped"
+level=error ts=2023-04-02T15:34:43.275Z caller=main.go:747 err="error loading config from \"/etc/prometheus/prometheus.yml\": couldn't load configuration (--config.file=\"/etc/prometheus/prometheus.yml\"): open /etc/prometheus/prometheus.yml: no such file or directory"
+```
+
+```
+level=info ts=2023-04-02T15:34:41.650Z caller=cluster.go:632 component=cluster msg="gossip not settled but continuing anyway" polls=0 elapsed=24.64227ms
+level=info ts=2023-04-02T15:35:42.061Z caller=main.go:231 msg="Starting Alertmanager" version="(version=0.20.0, branch=HEAD, revision=f74be0400a6243d10bb53812d6fa408ad71ff32d)"
+level=info ts=2023-04-02T15:35:42.061Z caller=main.go:232 build_context="(go=go1.13.5, user=root@00c3106655f8, date=20191211-14:13:14)"
+level=info ts=2023-04-02T15:35:42.061Z caller=cluster.go:161 component=cluster msg="setting advertise address explicitly" addr=172.21.0.5 port=9094
+level=info ts=2023-04-02T15:35:42.062Z caller=cluster.go:623 component=cluster msg="Waiting for gossip to settle..." interval=2s
+level=info ts=2023-04-02T15:35:42.085Z caller=coordinator.go:119 component=configuration msg="Loading configuration file" file=/etc/alertmanager/config.yml
+level=error ts=2023-04-02T15:35:42.085Z caller=coordinator.go:124 component=configuration msg="Loading configuration file failed" file=/etc/alertmanager/config.yml err="open /etc/alertmanager/config.yml: no such file or directory"
+level=info ts=2023-04-02T15:35:42.085Z caller=cluster.go:632 component=cluster msg="gossip not settled but continuing anyway" polls=0 elapsed=22.308692ms
+```
+
+```
+2023/04/02 15:33:40 loading Caddyfile via flag: open /etc/caddy/Caddyfile: no such file or directory
+2023/04/02 15:34:40 loading Caddyfile via flag: open /etc/caddy/Caddyfile: no such file or directory
+2023/04/02 15:35:40 loading Caddyfile via flag: open /etc/caddy/Caddyfile: no such file or directory
+2023/04/02 15:36:41 loading Caddyfile via flag: open /etc/caddy/Caddyfile: no such file or directory
+```
+
+***При этом конфигурационные файлы, на которые ругается docker, есть. Я использовал эти https://github.com/netology-code/virt-homeworks/tree/virt-11/05-virt-04-docker-compose/src/ansible/stack*** 
+
+***Подскажите, пожалуйста, что не так делаю.***
 
 ## Задача 4
 
@@ -171,12 +224,3 @@ internal_ip_address_node01_yandex_cloud = "192.168.101.33"
 <p align="center">
   <img width="1200" height="600" src="./assets/yc_02.png">
 </p>
-
-## Задача 5 (*)
-
-Создайте вторую ВМ и подключите её к мониторингу, развёрнутому на первом сервере.
-
-Чтобы получить зачёт, предоставьте:
-
-- скриншот из Grafana, на котором будут отображаться метрики добавленного вами сервера.
-
