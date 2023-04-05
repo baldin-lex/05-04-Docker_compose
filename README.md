@@ -161,7 +161,9 @@ ae18c9a9ac33   stefanprodan/caddy                 "/sbin/tini -- caddy…"   58 
 99446128bbc9   prom/alertmanager:v0.20.0          "/bin/alertmanager -…"   58 seconds ago   Up 35 seconds             9093/tcp                                                                           alertmanager
 ```
 
-## Задача 4
+---
+
+### Задача 4
 
 1. Откройте веб-браузер, зайдите на страницу http://<внешний_ip_адрес_вашей_ВМ>:3000.
 2. Используйте для авторизации логин и пароль из [.env-file](https://github.com/netology-group/virt-homeworks/blob/virt-11/05-virt-04-docker-compose/src/ansible/stack/.env).
@@ -170,7 +172,8 @@ ae18c9a9ac33   stefanprodan/caddy                 "/sbin/tini -- caddy…"   58 
 
 Чтобы получить зачёт, предоставьте: 
 
-- скриншот работающего веб-интерфейса Grafana с текущими метриками, как на примере ниже.
-<p align="center">
-  <img width="1200" height="600" src="./assets/yc_02.png">
-</p>
+- скриншот работающего веб-интерфейса Grafana с текущими метриками.
+
+### Решение:
+
+![DOCKER-COMPOSE](images/6.jpg)
